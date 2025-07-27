@@ -1,10 +1,11 @@
 const puppeteer = require('puppeteer-extra');
 const StealthPlugin = require('puppeteer-extra-plugin-stealth');
 const fs = require('fs');
+const router = require('express').Router();
 
 puppeteer.use(StealthPlugin());
 
-(async () => {
+const recordZoom = async () => {
   const browser = await puppeteer.launch({
     headless: false,           // required for screen-capture,
     executablePath: '/usr/bin/chromium-browser',
@@ -53,4 +54,15 @@ await page.evaluateOnNewDocument(() => {
     await new Promise(r => setTimeout(r, 60 * 1000));
     await page.evaluate(() => window._rec.stop());
     await browser.close();
-})();
+};
+
+router.get('/run', async (req,res)=>{
+    await recordZoom();
+    res.status(200).json({
+        status: true,
+        msg: 'Recording function ran'
+    });
+});
+
+module.exports = router;
+

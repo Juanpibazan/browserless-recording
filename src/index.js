@@ -3,6 +3,8 @@ const morgan = require('morgan');
 const cors = require('cors');
 const app = express();
 
+const recordingRoutes = require('./recordZoom');
+
 app.use(cors({
     origin:['*'],
     methods: ['GET', 'POST', 'PUT', 'DELETE'], // Métodos permitidos
@@ -14,6 +16,8 @@ app.use(express.urlencoded({extended:false}));
 
 app.set('port', process.env.PORT || 8000);
 
+app.use('/recording',recordingRoutes);
+
 app.get('/',(req,res)=>{
     res.status(200).json({
         status: true,
@@ -22,7 +26,7 @@ app.get('/',(req,res)=>{
 });
 
 app.post('/upload', express.raw({ limit: '10gb', type: 'video/webm' }), (req, res) => {
-  fs.writeFileSync('/recordings/zoom_recording.webm', req.body);
+  fs.writeFileSync('/home/ubuntu/zoom_recording.webm', req.body);
   res.sendStatus(200);
 });
 
