@@ -23,9 +23,8 @@ const recordZoom = async () => {
   await page.goto("https://us05web.zoom.us/j/7411289934?pwd=cElYbjdsb1Btc0V3b0N6OHhHaitRQT09",{ waitUntil: 'networkidle2' });
 
   // inside the Node script, after page.goto(...)
-await page.evaluateOnNewDocument(() => {
+await page.evaluate( async () => {
   // expose a global we can call later
-  window.startCapture = async () => {
     const stream = await navigator.mediaDevices.getDisplayMedia({
       video: { frameRate: 30 },
       audio: true
@@ -45,10 +44,8 @@ await page.evaluateOnNewDocument(() => {
     };
     rec.start();
     window._recorder = rec;   // so we can stop it later
-  };
-});
 
-    await page.evaluate(() => window.startCapture());
+});
     // wait 8 h
     //await new Promise(r => setTimeout(r, 8 * 60 * 60 * 1000));
     await new Promise(r => setTimeout(r, 60 * 1000));
